@@ -1,12 +1,13 @@
 import { observer } from 'mobx-react-lite';
 import React, { SyntheticEvent, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { Button, Item, Label, Segment } from 'semantic-ui-react';
 import { useStore } from '../../../app/stores/store';
 
 export default observer(function ActivityList() {
 	const [target, setTarget] = useState('');
 	const { activityStore } = useStore();
-	const { activitiesByDate, selectActivity, loading, deleteActivity} = activityStore;
+	const { activitiesByDate, loading, deleteActivity} = activityStore;
 
 	function HandleActivityDelete(e: SyntheticEvent<HTMLButtonElement>, id: string) {
 		setTarget(e.currentTarget.name);
@@ -16,25 +17,25 @@ export default observer(function ActivityList() {
 	return (
 		<Segment>
 			<Item.Group>
-				{activitiesByDate.map(activitie => (
-					<Item key={activitie.id}>
+				{activitiesByDate.map(activity => (
+					<Item key={activity.id}>
 						<Item.Content>
-							<Item.Header as='a'>{activitie.title}</Item.Header>
-							<Item.Meta>{activitie.date}</Item.Meta>
+							<Item.Header as='a'>{activity.title}</Item.Header>
+							<Item.Meta>{activity.date}</Item.Meta>
 							<Item.Description>
-								<div>{activitie.description}</div>
-								<div>{activitie.city}, {activitie.venue}</div>
+								<div>{activity.description}</div>
+								<div>{activity.city}, {activity.venue}</div>
 							</Item.Description>
 							<Item.Extra>
-								<Button floated='right' content='View' color='blue' onClick={() => selectActivity(activitie.id)} />
+								<Button as={Link} to={`/activities/${activity.id}`} floated='right' content='View' color='blue' />
 								<Button
-									name={activitie.id}
+									name={activity.id}
 									floated='right'
 									content='Delete'
 									color='red'
-									onClick={(e) => HandleActivityDelete(e, activitie.id)}
-									loading={loading && target === activitie.id} />
-								<Label basic content={activitie.category} />
+									onClick={(e) => HandleActivityDelete(e, activity.id)}
+									loading={loading && target === activity.id} />
+								<Label basic content={activity.category} />
 							</Item.Extra>
 						</Item.Content>
 					</Item>
